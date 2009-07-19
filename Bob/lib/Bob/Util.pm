@@ -80,7 +80,7 @@ sub constant_to_hashref {
         return;
     }
     foreach my $hashref (@$data) {
-        my ( $k, $v ) = each %$hashref;
+        my ( $k, $v ) = %$hashref;
         $hash{$k} = $v;
     }
     return \%hash;
