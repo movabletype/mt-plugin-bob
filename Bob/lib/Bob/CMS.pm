@@ -14,7 +14,7 @@ package Bob::CMS;
 
 use strict;
 use Bob::Job;
-use Bob::Util;
+use Bob::Util qw( get_type_data get_frequency_data );
 
 use MT::Blog;
 use MT::Util;
@@ -29,8 +29,8 @@ sub list_jobs {
     while ( my $b = $blog_iter->() ) {
         $blog_names{ $b->id } = $b->name;
     }
-    my $types_display = Bob::Util::constant_to_hashref('types');
-    my $freq_display  = Bob::Util::constant_to_hashref('frequencies');
+    my $types_display = get_type_data();
+    my $freq_display  = get_frequency_data();
 
     $app->listing(
         {   type     => 'bob_job',
@@ -102,11 +102,9 @@ sub edit_job {
     $param->{object_label_plural} = Bob::Job->class_label_plural;
     $param->{object_type}         = Bob::Job->class_type;
     $param->{frequencies_loop}
-        = Bob::Util::constant_to_template_loop( 'frequencies',
-        'frequency_value', 'frequency_name', $frequency );
+        = get_frequency_data( 'frequency_value', 'frequency_name', $frequency );
     $param->{types_loop}
-        = Bob::Util::constant_to_template_loop( 'types', 'type_value',
-        'type_name', $type );
+        = get_type_data( 'type_value', 'type_name', $type );
     return $app->build_page( $tmpl, $param );
 }
 
