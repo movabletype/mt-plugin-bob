@@ -49,12 +49,12 @@ sub get_constants {
     my ( $data, $key_name, $val_name, $selected_val ) = @_;
     return unless $data;
     my $converted;
-    my $wants_arrrayref = (defined $key_name and defined $val_name);
+    my $wants_arrayref = (defined $key_name and defined $val_name);
     $selected_val = '' unless defined $selected_val;
     foreach my $pair (@$data) {
         my $row;
         my @pair = %$pair;
-        if ($wants_arrrayref) {
+        if ($wants_arrayref) {
             ($row->{$key_name}, $row->{$val_name}) = @pair;
             $row->{selected} = ( $selected_val eq $pair[0] );
             push @$converted, $row;            
