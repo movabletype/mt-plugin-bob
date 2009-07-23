@@ -32,9 +32,15 @@ sub list_jobs {
     my $types_display = get_type_data();
     my $freq_display  = get_frequency_data();
 
+    my $params = {
+        ($app->param('saved')           ? (saved            => 1) : ()),
+        ($app->param('saved_deleted')   ? (saved_deleted    => 1) : ()),
+    };
+
     $app->listing(
         {   type     => 'bob_job',
             template => 'list_bob_job.tmpl',
+            params   => $params,
 
             # args  => {
             #     sort      => 'identifier',
@@ -70,6 +76,17 @@ sub edit_job {
     my $q      = $app->param;
     my $plugin = MT->component('Bob');
     my $tmpl   = $plugin->load_tmpl('edit_bob_job.tmpl');
+
+    if ( $app->param('saved') ) {
+        return $app->redirect(
+            $app->uri(
+                'mode' => 'rebuilder_list',
+                args =>
+                  { 'saved' => 1 }
+            )
+        );
+    }
+
     my $param;
     my ( $job, $frequency, $type );
     if ( $app->param('id') ) {
