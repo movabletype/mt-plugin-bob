@@ -34,6 +34,8 @@ use constant FREQUENCIES => [
     { 480  => '8 hours' },
     { 720  => '12 hours' },
     { 1440 => '24 hours' },
+    { 2880 => '48 hours' },
+    { 10080 => '7 days' },
 ];
 
 use constant TYPES => [

@@ -58,6 +58,7 @@ sub list_jobs {
                 else {
                     $row->{is_active} = 'N';
                 }
+
                 if ( $job->last_run ) {
                     $row->{formatted_last_run}
                         = MT::Util::format_ts( '%d %b %Y %H:%M',
@@ -132,9 +133,9 @@ sub save_job {
 
 sub cms_job_presave_callback {
     my ( $cb, $app, $job, $orig ) = @_;
-    unless ( $app->{query}->{is_active} ) {
-        $job->is_active(0);
-    }
+    #unless ( $app->{query}->{is_active} ) {
+        #$job->is_active(0);
+    #}
     return 1;
 }
 
