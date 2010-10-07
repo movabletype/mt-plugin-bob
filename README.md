@@ -1,7 +1,7 @@
 # Bob the Rebuilder, a plugin for Movable Type
 
-Authors: Steve Cook, Six Apart
-Copyright: 2009 Six Apart
+Authors: Six Apart
+Copyright: 2009 Six Apart Ltd.
 License: GPL
 
 ## Overview
