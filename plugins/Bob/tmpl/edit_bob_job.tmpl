@@ -1,7 +1,7 @@
 <mt:if name="job_id">
     <mt:setvarblock name="page_title"><__trans phrase="Edit [_1]" params="<$mt:var name="object_label"$>"></mt:setvarblock>
 <mt:else>
-	<mt:setvarblock name="page_title"><__trans phrase="New [_1]" params="<$mt:var name="object_label"$>"></mt:setvarblock>
+    <mt:setvarblock name="page_title"><__trans phrase="New [_1]" params="<$mt:var name="object_label"$>"></mt:setvarblock>
     <mt:setvar name="new_object" value="1">
 </mt:if>
 <$mt:setvar name="position_actions_bottom" value="1"$>
@@ -76,62 +76,62 @@
     <input type="hidden" name="magic_token" value="<mt:var name="magic_token">" />
     <input type="hidden" name="order" value="<mt:var name="order">" />
 
-	<fieldset>
-		<mt:unless name="blog_name">
-	    <mtapp:setting
-	        id="job_blog_id"
-	        label="<__trans phrase="Blog">"
-	        required="1">
-	    	<select name="blog_id" id="job_blog_id">
-	        <mt:loop name="blogs_loop">
-	            <option value="<mt:var name="blog_id">"><mt:var name="blog_name" escape="html"></option>
-	        </mt:loop>
-			</select>
-	    </mtapp:setting>
-		<mt:else>
-	    <mtapp:setting
-	        id="job_blog_id"
-	        label="<__trans phrase="Blog">"
-	        required="1">
-			<span><mt:var name="blog_name" escape="html"></span>
-			<input type="hidden" name="blog_id" value="<mt:var name="blog_id">" />
-	    </mtapp:setting>
-	    </mt:unless>
-	</fieldset>
+    <fieldset>
+        <mt:unless name="blog_name">
+        <mtapp:setting
+            id="job_blog_id"
+            label="<__trans phrase="Blog">"
+            required="1">
+            <select name="blog_id" id="job_blog_id">
+            <mt:loop name="blogs_loop">
+                <option value="<mt:var name="blog_id">"><mt:var name="blog_name" escape="html"></option>
+            </mt:loop>
+            </select>
+        </mtapp:setting>
+        <mt:else>
+        <mtapp:setting
+            id="job_blog_id"
+            label="<__trans phrase="Blog">"
+            required="1">
+            <span><mt:var name="blog_name" escape="html"></span>
+            <input type="hidden" name="blog_id" value="<mt:var name="blog_id">" />
+        </mtapp:setting>
+        </mt:unless>
+    </fieldset>
 
-	<fieldset>
-	    <mtapp:setting
-	        id="job_type"
-	        label="<__trans phrase="Rebuild Type">"
-	        required="1">
-	    	<select name="type" id="job_type">
-	        <mt:loop name="types_loop">
-	            <option value="<mt:var name="type_value">"<mt:if var="selected"> selected="selected"</mt:if>><mt:var name="type_name" escape="html"></option>
-	        </mt:loop>
-			</select>
-	    </mtapp:setting>
-	</fieldset>
+    <fieldset>
+        <mtapp:setting
+            id="job_type"
+            label="<__trans phrase="Rebuild Type">"
+            required="1">
+            <select name="type" id="job_type">
+            <mt:loop name="types_loop">
+                <option value="<mt:var name="type_value">"<mt:if var="selected"> selected="selected"</mt:if>><mt:var name="type_name" escape="html"></option>
+            </mt:loop>
+            </select>
+        </mtapp:setting>
+    </fieldset>
 
-	<fieldset>
-	    <mtapp:setting
-	        id="job_frequency"
-	        label="<__trans phrase="Frequency">"
-	        required="1">
-	    	<select name="frequency" id="job_frequency">
-	        <mt:loop name="frequencies_loop">
-	            <option value="<mt:var name="frequency_value">"<mt:if var="selected"> selected="selected"</mt:if>><mt:var name="frequency_name" escape="html"></option>
-	        </mt:loop>
-			</select>
-	    </mtapp:setting>
-	</fieldset>
+    <fieldset>
+        <mtapp:setting
+            id="job_frequency"
+            label="<__trans phrase="Frequency">"
+            required="1">
+            <select name="frequency" id="job_frequency">
+            <mt:loop name="frequencies_loop">
+                <option value="<mt:var name="frequency_value">"<mt:if var="selected"> selected="selected"</mt:if>><mt:var name="frequency_name" escape="html"></option>
+            </mt:loop>
+            </select>
+        </mtapp:setting>
+    </fieldset>
 
-	<fieldset>
-		<mtapp:setting
-		    id="is_active"
-		    label="<__trans phrase="Active">">
-		        <input type="checkbox" name="is_active" id="is_active" value="1" <mt:if name="is_active">checked="checked"</mt:if>/>
-		</mtapp:setting>
-	</fieldset>
+    <fieldset>
+        <mtapp:setting
+            id="is_active"
+            label="<__trans phrase="Active">">
+                <input type="checkbox" name="is_active" id="is_active" value="1" <mt:if name="is_active">checked="checked"</mt:if>/>
+        </mtapp:setting>
+    </fieldset>
 
 <mt:setvartemplate name="action_buttons">
     <button
