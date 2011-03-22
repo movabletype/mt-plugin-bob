@@ -1,15 +1,15 @@
 #############################################################################
 # Copyright © 2008-2009 Six Apart Ltd.
-# This program is free software: you can redistribute it and/or modify it 
+# This program is free software: you can redistribute it and/or modify it
 # under the terms of version 2 of the GNU General Public License as published
-# by the Free Software Foundation, or (at your option) any later version.  
+# by the Free Software Foundation, or (at your option) any later version.
 # This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
-# version 2 for more details.  You should have received a copy of the GNU 
-# General Public License version 2 along with this program. If not, see 
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# version 2 for more details.  You should have received a copy of the GNU
+# General Public License version 2 along with this program. If not, see
 # <http://www.gnu.org/licenses/>.
-# $Id: Job.pm 17557 2009-03-30 00:20:05Z steve $
+
 package Bob::Job;
 use strict;
 use constant WORKER_PRIORITY    => 1;
@@ -52,9 +52,9 @@ sub inject_worker {
     require MT::TheSchwartz;
     require MT::Util;
     require TheSchwartz::Job;
-	require MT::Blog;
-	my $blog = MT::Blog->load( $self->blog_id );
-	return unless ( $blog );
+    require MT::Blog;
+    my $blog = MT::Blog->load( $self->blog_id );
+    return unless ( $blog );
     my $debug     = MT->config('BobDebug');
     my $frequency = $self->frequency;
     my $last_run  = $self->last_run;
