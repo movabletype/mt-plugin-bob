@@ -39,9 +39,25 @@ use constant FREQUENCIES => [
 ];
 
 use constant TYPES => [
-    { 'all'      => 'Entire Blog' },
-    { 'indexes'  => 'All Indices' },
-    { 'archives' => 'All Archives' },
+    { 'all'              => 'Entire Blog' },
+    { 'indexes'          => 'All Indices' },
+    { 'archives'         => 'All Archives' },
+    { 'Page'             => 'All Page Archives' },
+    { 'Individual'       => 'All Individual Entry Archives' },
+    { 'Yearly'           => 'All Yearly Archives' },
+    { 'Monthly'          => 'All Monthly Archives' },
+    { 'Weekly'           => 'All Weekly Archives' },
+    { 'Daily'            => 'All Daily Archives' },
+    { 'Category'         => 'All Category Archives' },
+    { 'Category-Yearly'  => 'All Category-Yearly Archives' },
+    { 'Category-Monthly' => 'All Category-Monthly Archives' },
+    { 'Category-Daily'   => 'All Category-Daily Archives' },
+    { 'Category-Weekly'  => 'All Category-Weekly Archives' },
+    { 'Author'           => 'All Author Archives' },
+    { 'Author-Yearly'    => 'All Author-Yearly Archives' },
+    { 'Author-Monthly'   => 'All Author-Monthly Archives' },
+    { 'Author-Weekly'    => 'All Author-Weekly Archives' },
+    { 'Author-Daily'     => 'All Author-Daily Archives' },
 ];
 
 sub get_type_data       { get_constants(TYPES, @_) }
@@ -100,6 +116,16 @@ sub rebuild_for_job {
                 MT->log( 'Bob rebuilding archives for blog ' . $blog_id );
             }
             $pub->rebuild( BlogID => $blog_id, NoIndexes => 1 );
+        }
+        else {
+            if ($debug) {
+                MT->log( 'Bob rebuilding ' . $bobjob->type . ' archives for blog ' . $blog_id );
+            }
+            $pub->rebuild(
+                BlogID      => $blog_id,
+                NoIndexes   => 1,
+                ArchiveType => $bobjob->type,
+            );
         }
         $bobjob->last_run( MT::Util::epoch2ts( $bobjob->blog_id, time ) );
         $bobjob->save;
