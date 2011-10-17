@@ -128,6 +128,12 @@ sub edit_job {
 
 sub save_job {
     my $app = shift;
+
+    # If the "Active" checkbox is unchecked (meaning making this job inactive)
+    # then be sure to set a value for this parameter.
+    my $active = $app->param('is_active') || '0';
+    $app->param('is_active', $active);
+
     $app->forward('save');
 }
 
