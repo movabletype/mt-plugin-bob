@@ -1,8 +1,8 @@
 name: Bob the Rebuilder
 id: Bob
 key: Bob
-version: 0.9rc2
-schema_version: 0.1
+version: 1.0.2
+schema_version: 1
 description: Rebuild selected pages automatically
 object_types:
     bob_job: Bob::Job

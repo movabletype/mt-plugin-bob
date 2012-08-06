@@ -14,7 +14,7 @@ package Bob::CMS;
 
 use strict;
 use Bob::Job;
-use Bob::Util;
+use Bob::Util qw( get_type_data get_frequency_data );
 
 use MT::Blog;
 use MT::Util;
@@ -29,12 +29,18 @@ sub list_jobs {
     while ( my $b = $blog_iter->() ) {
         $blog_names{ $b->id } = $b->name;
     }
-    my $types_display = Bob::Util::constant_to_hashref('types');
-    my $freq_display  = Bob::Util::constant_to_hashref('frequencies');
+    my $types_display = get_type_data();
+    my $freq_display  = get_frequency_data();
+
+    my $params = {
+        ($app->param('saved')           ? (saved            => 1) : ()),
+        ($app->param('saved_deleted')   ? (saved_deleted    => 1) : ()),
+    };
 
     $app->listing(
         {   type     => 'bob_job',
             template => 'list_bob_job.tmpl',
+            params   => $params,
 
             # args  => {
             #     sort      => 'identifier',
@@ -52,6 +58,7 @@ sub list_jobs {
                 else {
                     $row->{is_active} = 'N';
                 }
+
                 if ( $job->last_run ) {
                     $row->{formatted_last_run}
                         = MT::Util::format_ts( '%d %b %Y %H:%M',
@@ -70,6 +77,17 @@ sub edit_job {
     my $q      = $app->param;
     my $plugin = MT->component('Bob');
     my $tmpl   = $plugin->load_tmpl('edit_bob_job.tmpl');
+
+    if ( $app->param('saved') ) {
+        return $app->redirect(
+            $app->uri(
+                'mode' => 'rebuilder_list',
+                args =>
+                  { 'saved' => 1 }
+            )
+        );
+    }
+
     my $param;
     my ( $job, $frequency, $type );
     if ( $app->param('id') ) {
@@ -102,24 +120,28 @@ sub edit_job {
     $param->{object_label_plural} = Bob::Job->class_label_plural;
     $param->{object_type}         = Bob::Job->class_type;
     $param->{frequencies_loop}
-        = Bob::Util::constant_to_template_loop( 'frequencies',
-        'frequency_value', 'frequency_name', $frequency );
+        = get_frequency_data( 'frequency_value', 'frequency_name', $frequency );
     $param->{types_loop}
-        = Bob::Util::constant_to_template_loop( 'types', 'type_value',
-        'type_name', $type );
+        = get_type_data( 'type_value', 'type_name', $type );
     return $app->build_page( $tmpl, $param );
 }
 
 sub save_job {
     my $app = shift;
+
+    # If the "Active" checkbox is unchecked (meaning making this job inactive)
+    # then be sure to set a value for this parameter.
+    my $active = $app->param('is_active') || '0';
+    $app->param('is_active', $active);
+
     $app->forward('save');
 }
 
 sub cms_job_presave_callback {
     my ( $cb, $app, $job, $orig ) = @_;
-    unless ( $app->{query}->{is_active} ) {
-        $job->is_active(0);
-    }
+    #unless ( $app->{query}->{is_active} ) {
+        #$job->is_active(0);
+    #}
     return 1;
 }
 

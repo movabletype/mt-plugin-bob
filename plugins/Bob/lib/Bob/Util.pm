@@ -14,6 +14,8 @@ package Bob::Util;
 
 use strict;
 use warnings;
+use base 'Exporter';
+our @EXPORT_OK = qw( get_type_data get_frequency_data );
 
 use constant FREQUENCIES => [
     { 1    => '1 minute' },
@@ -32,58 +34,54 @@ use constant FREQUENCIES => [
     { 480  => '8 hours' },
     { 720  => '12 hours' },
     { 1440 => '24 hours' },
+    { 2880 => '48 hours' },
+    { 10080 => '7 days' },
 ];
 
 use constant TYPES => [
-    { 'all'      => 'Entire Blog' },
-    { 'indexes'  => 'All Indices' },
-    { 'archives' => 'All Archives' },
+    { 'all'              => 'Entire Blog' },
+    { 'indexes'          => 'All Indices' },
+    { 'archives'         => 'All Archives' },
+    { 'Page'             => 'All Page Archives' },
+    { 'Individual'       => 'All Individual Entry Archives' },
+    { 'Yearly'           => 'All Yearly Archives' },
+    { 'Monthly'          => 'All Monthly Archives' },
+    { 'Weekly'           => 'All Weekly Archives' },
+    { 'Daily'            => 'All Daily Archives' },
+    { 'Category'         => 'All Category Archives' },
+    { 'Category-Yearly'  => 'All Category-Yearly Archives' },
+    { 'Category-Monthly' => 'All Category-Monthly Archives' },
+    { 'Category-Daily'   => 'All Category-Daily Archives' },
+    { 'Category-Weekly'  => 'All Category-Weekly Archives' },
+    { 'Author'           => 'All Author Archives' },
+    { 'Author-Yearly'    => 'All Author-Yearly Archives' },
+    { 'Author-Monthly'   => 'All Author-Monthly Archives' },
+    { 'Author-Weekly'    => 'All Author-Weekly Archives' },
+    { 'Author-Daily'     => 'All Author-Daily Archives' },
 ];
 
-sub constant_to_template_loop {
-    my ( $constant, $key_name, $val_name, $selected_val ) = @_;
-    my @loop;
-    my $data;
-    if ( $constant eq 'frequencies' ) {
-        $data = FREQUENCIES;
-    }
-    elsif ( $constant eq 'types' ) {
-        $data = TYPES;
-    }
-    else {
-        return;
-    }
+sub get_type_data       { get_constants(TYPES, @_) }
+sub get_frequency_data  { get_constants(FREQUENCIES, @_) }
+
+sub get_constants {
+    my ( $data, $key_name, $val_name, $selected_val ) = @_;
+    return unless $data;
+    my $converted;
+    my $wants_arrayref = (defined $key_name and defined $val_name);
+    $selected_val = '' unless defined $selected_val;
     foreach my $pair (@$data) {
         my $row;
         my @pair = %$pair;
-        $row->{$key_name} = $pair[0];
-        $row->{$val_name} = $pair[1];
-        if ( $selected_val eq $pair[0] ) {
-            $row->{selected} = 1;
+        if ($wants_arrayref) {
+            ($row->{$key_name}, $row->{$val_name}) = @pair;
+            $row->{selected} = ( $selected_val eq $pair[0] );
+            push @$converted, $row;            
         }
-        push @loop, $row;
+        else {
+            $converted->{ $pair[0] } = $pair[1];
+        }
     }
-    return \@loop;
-}
-
-sub constant_to_hashref {
-    my ($constant) = @_;
-    my %hash;
-    my $data;
-    if ( $constant eq 'frequencies' ) {
-        $data = FREQUENCIES;
-    }
-    elsif ( $constant eq 'types' ) {
-        $data = TYPES;
-    }
-    else {
-        return;
-    }
-    foreach my $hashref (@$data) {
-        my ( $k, $v ) = each %$hashref;
-        $hash{$k} = $v;
-    }
-    return \%hash;
+    return $converted;
 }
 
 sub rebuild_for_job {
@@ -98,7 +96,7 @@ sub rebuild_for_job {
     my $blog_id = $bobjob->blog_id;
 
     if ( $bobjob->is_active ) {
-        my $types = constant_to_hashref('types');
+        my $types = get_type_data();
         use MT::WeblogPublisher;
         my $pub = MT::WeblogPublisher->new;
         if ( $bobjob->type eq 'all' ) {
@@ -118,6 +116,16 @@ sub rebuild_for_job {
                 MT->log( 'Bob rebuilding archives for blog ' . $blog_id );
             }
             $pub->rebuild( BlogID => $blog_id, NoIndexes => 1 );
+        }
+        else {
+            if ($debug) {
+                MT->log( 'Bob rebuilding ' . $bobjob->type . ' archives for blog ' . $blog_id );
+            }
+            $pub->rebuild(
+                BlogID      => $blog_id,
+                NoIndexes   => 1,
+                ArchiveType => $bobjob->type,
+            );
         }
         $bobjob->last_run( MT::Util::epoch2ts( $bobjob->blog_id, time ) );
         $bobjob->save;
