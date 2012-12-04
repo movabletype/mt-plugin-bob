@@ -20,7 +20,7 @@ __PACKAGE__->install_properties(
     {   column_defs => {
             'id'          => 'integer not null auto_increment',
             'blog_id'     => 'integer not null',
-            'is_active'   => 'integer not null default 1',
+            'is_active'   => 'integer default 1',
             'frequency'   => 'integer not null',
             'target_time' => 'string(4)',
             'type'        => 'string(10)',
