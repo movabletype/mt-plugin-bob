@@ -4,8 +4,6 @@ When publishing an Entry in Movable Type, the related templates are also publish
 
 Bob the Rebuilder provides a way to republish a blog (or a part of a blog) on a recurring schedule. For example, create a job to republish an entire blog every 24 hours, or create a job to republish all index archives every 10 minutes. An unlimited number of jobs can be created to republish any blog (or part of it) according to a number of set frequency choices.
 
-Bob the Rebuilder uses the Movable Type Tasks framework, which is typically run by the script [`run-periodic-tasks`](http://www.movabletype.org/documentation/administrator/setting-up-run-periodic-taskspl.html).
-
 
 # Prerequisites
 

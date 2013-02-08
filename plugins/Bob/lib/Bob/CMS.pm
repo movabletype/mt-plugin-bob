@@ -80,13 +80,16 @@ sub edit_job {
     my $tmpl   = $plugin->load_tmpl('edit_bob_job.tmpl');
 
     if ( $app->param('saved') ) {
-        return $app->redirect(
-            $app->uri(
-                'mode' => 'rebuilder_list',
-                args =>
-                  { 'saved' => 1 }
-            )
-        );
+        _redirect_to_listing({
+            app => $app,
+            key => 'saved',
+        });
+    }
+    if ( $app->param('deleted') ) {
+        _redirect_to_listing({
+            app => $app,
+            key => 'deleted',
+        });
     }
 
     my $param;
@@ -136,6 +139,56 @@ sub save_job {
     $app->param('is_active', $active);
 
     $app->forward('save');
+}
+
+# Delete a rebuilder job, either from the listing or edit screen.
+sub delete_job {
+    my ($app) = @_;
+    my $q     = $app->can('query') ? $app->query : $app->param;
+
+    $app->validate_magic or return;
+
+    my @ids = $q->param('id');
+    for my $id (@ids) {
+        my $job = MT->model('bob_job')->load($id) or next;
+        $job->remove;
+    }
+    $app->add_return_arg( deleted => 1 );
+    $app->call_return;
+}
+
+# After deleting or saving, return to the listing screen. However, be sure to
+# redirect to the correct URL based on the version of MT.
+sub _redirect_to_listing {
+    my ($arg_ref) = @_;
+    my $app = $arg_ref->{app};
+    my $key = $arg_ref->{key};
+
+    # MT5
+    if ( $app->product_version =~ /^5/ ) {
+        return $app->redirect(
+            $app->uri(
+                mode => 'list',
+                args => {
+                    _type   => 'bob_job',
+                    blog_id => 0,
+                    $key    => 1,
+                },
+            )
+        );
+    }
+    # MT4
+    else {
+        return $app->redirect(
+            $app->uri(
+                mode => 'rebuilder_list',
+                args => {
+                    blog_id => 0,
+                    $key    => 1,
+                },
+            )
+        );
+    }
 }
 
 sub cms_job_presave_callback {

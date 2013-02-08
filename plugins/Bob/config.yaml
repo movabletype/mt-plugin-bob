@@ -16,10 +16,21 @@ task_workers:
 applications:
     cms:
         methods:
-            rebuilder_list: $Bob::Bob::CMS::list_jobs
-            rebuilder_edit: $Bob::Bob::CMS::edit_job
-            rebuilder_save: $Bob::Bob::CMS::save_job
+            rebuilder_list:   $Bob::Bob::CMS::list_jobs
+            rebuilder_edit:   $Bob::Bob::CMS::edit_job
+            rebuilder_save:   $Bob::Bob::CMS::save_job
+            rebuilder_delete: $Bob::Bob::CMS::delete_job
         menus:
+            # MT5
+            settings:rebuilder:
+                label: Rebuilder
+                order: 4000
+                mode: list
+                args:
+                    _type: bob_job
+                view: system
+                system_permission: administer
+            # MT4
             manage:bob_system_config:
                 label: Rebuilder
                 order: 3999
@@ -31,3 +42,30 @@ callbacks:
     cms_pre_save.bob_job: $Bob::Bob::CMS::cms_job_presave_callback
     cms_post_save.bob_job: $Bob::Bob::CMS::cms_job_postsave_callback
     Bob::Job::pre_remove: $Bob::Bob::Util::job_preremove
+
+listing_screens:
+    bob_job:
+        primary:
+            - blog_name
+            - type
+        default_sort_key: 'created_on'
+
+list_properties:
+    bob_job: $Bob::Bob::Job::list_properties
+
+content_actions:
+    bob_job:
+        create:
+            label: 'Create a new rebuilder job'
+            order: 100
+            mode: rebuilder_edit
+            class: 'icon-create'
+
+list_actions:
+    bob_job:
+        delete:
+            label: 'Delete'
+            order: 200
+            mode: rebuilder_delete
+            continue_prompt: 'Are you sure you want to delete the selected rebuilder job(s)?'
+            button: 1

@@ -19,6 +19,8 @@ use constant WORKER_PRIORITY    => 1;
 use constant SECONDS_PER_MINUTE => 60;
 
 use base qw( MT::Object );
+use Bob::Util qw( get_type_data get_frequency_data );
+
 __PACKAGE__->install_properties(
     {   column_defs => {
             'id'          => 'integer not null auto_increment',
@@ -89,5 +91,139 @@ sub inject_worker {
     $self->next_run( MT::Util::epoch2ts( $blog, $next_epoch ) );
     $self->save;
 }
+
+# The MT5 Listing Screen properties
+sub list_properties {
+    return {
+        id => {
+            auto    => 1,
+            label   => 'ID',
+            order   => 100,
+            display => 'optional',
+        },
+        is_active => {
+            label   => 'Status',
+            order   => '101',
+            col     => 'is_active',
+            display => 'default',
+            base    => '__virtual.string',
+            html    => sub {
+                my $prop = shift;
+                my ( $obj, $app, $opts ) = @_;
+                my $statuses = {
+                    '0' => {
+                        text => 'Inactive',
+                        icon => 'role-inactive.gif',
+                    },
+                    '1' => {
+                        text => 'Active',
+                        icon => 'role-active.gif',
+                    },
+                };
+                return '<img src="' . $app->static_path . 'images/status_icons/'
+                    . $statuses->{ $obj->is_active }->{icon} . '" '
+                    . 'width="9" height="9" style="padding: 0 2px 1px 0;" /> '
+                    . $statuses->{ $obj->is_active }->{text};
+            },
+        },
+        blog_name => {
+            base  => '__common.blog_name',
+            order     => 200,
+            display   => 'force',
+            site_name => sub { MT->app->blog ? 0 : 1 },
+        },
+        type => {
+            base    => '__virtual.string',
+            label   => 'Rebuild Object',
+            order   => 300,
+            display => 'force',
+            col     => 'type',
+            html    => sub {
+                my $prop = shift;
+                my ( $obj, $app, $opts ) = @_;
+                my $types = get_type_data();
+                my $uri = $app->uri . '?__mode=rebuilder_edit&id=' . $obj->id;
+                return "<a href=\"$uri\">" . $types->{ $obj->type } . '</a>';
+            },
+        },
+        frequency => {
+            auto    => '1',
+            label   => 'Frequency',
+            order   => 400,
+            display => 'default',
+            html    => sub {
+                my $prop = shift;
+                my ( $obj, $app, $opts ) = @_;
+                my $freqs = get_frequency_data();
+                return $freqs->{ $obj->frequency };
+            },
+        },
+        last_run => {
+            base    => '__virtual.date',
+            label   => 'Last Run',
+            order   => 500,
+            display => 'default',
+            col     => 'last_run',
+            # Need to set the blog context to get the correct date display.
+            html    => sub {
+                my $prop = shift;
+                my ( $obj, $app, $opts ) = @_;
+                my $ts          = $prop->raw(@_) or return '';
+                my $date_format = MT::App::CMS::LISTING_DATE_FORMAT();
+                my $blog        = MT->model('blog')->load( $obj->blog_id );
+                my $is_relative
+                    = ( $app->user->date_format || 'relative' ) eq
+                    'relative' ? 1 : 0;
+                return $is_relative
+                    ? MT::Util::relative_date( $ts, time, $blog )
+                    : MT::Util::format_ts(
+                        $date_format,
+                        $ts,
+                        $blog,
+                        $app->user ? $app->user->preferred_language
+                        : undef
+                    );
+            },
+        },
+        next_run => {
+            base    => '__virtual.date',
+            label   => 'Next Run',
+            order   => 600,
+            display => 'default',
+            col     => 'next_run',
+            # Need to set the blog context to get the correct date display.
+            html    => sub {
+                my $prop = shift;
+                my ( $obj, $app, $opts ) = @_;
+                my $ts          = $prop->raw(@_) or return '';
+                my $date_format = MT::App::CMS::LISTING_DATE_FORMAT();
+                my $blog        = MT->model('blog')->load( $obj->blog_id );
+                my $is_relative
+                    = ( $app->user->date_format || 'relative' ) eq
+                    'relative' ? 1 : 0;
+                return $is_relative
+                    ? MT::Util::relative_date( $ts, time, $blog )
+                    : MT::Util::format_ts(
+                        $date_format,
+                        $ts,
+                        $blog,
+                        $app->user ? $app->user->preferred_language
+                        : undef
+                    );
+            },
+        },
+        created_by => {
+            base    => '__virtual.author_name',
+            order   => 700,
+            display => 'optional',
+        },
+        created_on => {
+            base    => '__virtual.created_on',
+            order   => 800,
+            display => 'optional',
+        },
+    };
+}
+
 
 1;
