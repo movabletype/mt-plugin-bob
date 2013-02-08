@@ -1,66 +1,40 @@
 # Bob the Rebuilder, a plugin for Movable Type
 
-Authors: Six Apart
-Copyright: 2009 Six Apart Ltd.
-License: GPL
+When publishing an Entry in Movable Type, the related templates are also published: the entry, a category archive, monthly archive, and main index, for example. Often in large multiblog installs, however, circumstances arise where some templates aren't republished when needed.
 
-## Overview
+Bob the Rebuilder provides a way to republish a blog (or a part of a blog) on a recurring schedule. For example, create a job to republish an entire blog every 24 hours, or create a job to republish all index archives every 10 minutes. An unlimited number of jobs can be created to republish any blog (or part of it) according to a number of set frequency choices.
 
-Provide a short overview of plugin here. List details under "Features".
-
-> **Note:** This note formatting. Replace "Note:" with "Tip:", "Warning:", "Deprecated:", "Bug:", etc.
+Bob the Rebuilder uses the Movable Type Tasks framework, which is typically run by the script [`run-periodic-tasks`](http://www.movabletype.org/documentation/administrator/setting-up-run-periodic-taskspl.html).
 
 
-## Features
+# Prerequisites
 
-* feature
-    * sub feature
-
-
-## Requirements
-
-* MT 4.x
-* Foo
-* Bar
-* Baz
+* Movable Type 4.x or 5.1+
+* `run-periodic-tasks` must be running
 
 
-## Documentation
+# Installation
 
-Here is a description of how to use each feature provided by $PluginName.
+To install this plugin follow the instructions found here:
 
-### Topic A
-
-1. step one
-2. step two
-
-    more instruction.
-
-        <mt:Sample>
-            <$mt:Code$>
-            <$mt:Here$>
-        </mt:Sample>
-
-3. step three
+http://tinyurl.com/easy-plugin-install
 
 
-## Installation
+# Configuration
 
-1. Move the `Bob` plugin directory to the MT `plugins` directory.
+Bob the Rebuilder is configured at the System level (Settings > Rebuilder in MT5; Manage > Rebuilder in MT4). "Jobs" are used to rebuild a blog or part of a blog on a schedule, and can be enabled or disabled as needed.
 
-Should look like this when installed:
+"Create a rebuilder job" to get started: specify a blog, what you want to republish, its frequency, and save it. Done!
 
-    $MT_HOME/
-        plugins/
-            Bob/
-                (plugin files here)
+Its important to be aware of the load you may be placing on the server -- many jobs each republishing an entire blog every few minutes is goint to take a lot of resources. Planning site architecture is outside of the scope of this document, but the goal should be to publish efficiently. Only publish what *needs* to be republished, and republish as little as possible.
 
-
-## Desired Feature Wish List
-
-* Add wish-list item here.
+Tip: if a blog's archives need to be republished, republish each archive type with a different job using a different schedule. Weekly, Monthly, and Yearly archives almost definitely don't need to be published every few minutes or hours, however a category archive may need much greater frequency.
 
 
-## Support
+# Support
 
 This plugin is not an official Six Apart release, and as such support from Six Apart for this plugin is not available.
+
+Authors: Six Apart, Endevver
+Copyright: 2009 Six Apart Ltd.
+License: GPL
