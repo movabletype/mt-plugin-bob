@@ -4,12 +4,15 @@ key: Bob
 version: 1.0.2
 schema_version: 1
 description: Rebuild selected pages automatically
+
 object_types:
     bob_job: Bob::Job
+
 task_workers:
     bob_rebuilder:
         label: Rebuild designated page or pages
         class: Bob::Worker::Rebuilder
+
 applications:
     cms:
         methods:
@@ -23,6 +26,7 @@ applications:
                 mode: rebuilder_list
                 view: system
                 system_permission: administer
+
 callbacks:
     cms_pre_save.bob_job: $Bob::Bob::CMS::cms_job_presave_callback
     cms_post_save.bob_job: $Bob::Bob::CMS::cms_job_postsave_callback

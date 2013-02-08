@@ -11,7 +11,10 @@
 # <http://www.gnu.org/licenses/>.
 
 package Bob::Job;
+
 use strict;
+use warnings;
+
 use constant WORKER_PRIORITY    => 1;
 use constant SECONDS_PER_MINUTE => 60;
 

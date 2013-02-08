@@ -13,6 +13,7 @@
 package Bob::CMS;
 
 use strict;
+use warnings;
 use Bob::Job;
 use Bob::Util qw( get_type_data get_frequency_data );
 
