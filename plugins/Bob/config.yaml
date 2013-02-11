@@ -29,14 +29,14 @@ applications:
                 args:
                     _type: bob_job
                 view: system
-                system_permission: administer
+                permission: administer
             # MT4
             manage:bob_system_config:
                 label: Rebuilder
                 order: 3999
                 mode: rebuilder_list
                 view: system
-                system_permission: administer
+                permission: administer
                 condition: $Bob::Bob::CMS::mt5_menu_condition
 
 callbacks:
