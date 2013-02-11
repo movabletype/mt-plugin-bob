@@ -37,6 +37,7 @@ applications:
                 mode: rebuilder_list
                 view: system
                 system_permission: administer
+                condition: $Bob::Bob::CMS::mt5_menu_condition
 
 callbacks:
     cms_pre_save.bob_job: $Bob::Bob::CMS::cms_job_presave_callback

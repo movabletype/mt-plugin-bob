@@ -219,4 +219,15 @@ sub cms_job_postsave_callback {
     return 1;
 }
 
+# If the Create and Manage plugin is installed in MT5 (and thereby the Manage
+# menu exists), then we *don't* want to show the link to Bob the Rebuilder
+# there and need to explicitly hide it: just check if this is MT5
+sub mt5_menu_condition {
+    # This is MT4.x; display the Manage > Rebuilder menu item.
+    return 1 if MT->product_version =~ /^4/;
+    # This is MT5; don't display Manage > Rebuilder because it exists at
+    # Settings > Rebuilder.
+    return 0;
+}
+
 1;
