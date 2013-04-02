@@ -13,6 +13,7 @@
 package Bob::CMS;
 
 use strict;
+use warnings;
 use Bob::Job;
 use Bob::Util qw( get_type_data get_frequency_data );
 
@@ -79,13 +80,16 @@ sub edit_job {
     my $tmpl   = $plugin->load_tmpl('edit_bob_job.tmpl');
 
     if ( $app->param('saved') ) {
-        return $app->redirect(
-            $app->uri(
-                'mode' => 'rebuilder_list',
-                args =>
-                  { 'saved' => 1 }
-            )
-        );
+        _redirect_to_listing({
+            app => $app,
+            key => 'saved',
+        });
+    }
+    if ( $app->param('deleted') ) {
+        _redirect_to_listing({
+            app => $app,
+            key => 'deleted',
+        });
     }
 
     my $param;
@@ -137,6 +141,56 @@ sub save_job {
     $app->forward('save');
 }
 
+# Delete a rebuilder job, either from the listing or edit screen.
+sub delete_job {
+    my ($app) = @_;
+    my $q     = $app->can('query') ? $app->query : $app->param;
+
+    $app->validate_magic or return;
+
+    my @ids = $q->param('id');
+    for my $id (@ids) {
+        my $job = MT->model('bob_job')->load($id) or next;
+        $job->remove;
+    }
+    $app->add_return_arg( deleted => 1 );
+    $app->call_return;
+}
+
+# After deleting or saving, return to the listing screen. However, be sure to
+# redirect to the correct URL based on the version of MT.
+sub _redirect_to_listing {
+    my ($arg_ref) = @_;
+    my $app = $arg_ref->{app};
+    my $key = $arg_ref->{key};
+
+    # MT5
+    if ( $app->product_version =~ /^5/ ) {
+        return $app->redirect(
+            $app->uri(
+                mode => 'list',
+                args => {
+                    _type   => 'bob_job',
+                    blog_id => 0,
+                    $key    => 1,
+                },
+            )
+        );
+    }
+    # MT4
+    else {
+        return $app->redirect(
+            $app->uri(
+                mode => 'rebuilder_list',
+                args => {
+                    blog_id => 0,
+                    $key    => 1,
+                },
+            )
+        );
+    }
+}
+
 sub cms_job_presave_callback {
     my ( $cb, $app, $job, $orig ) = @_;
     #unless ( $app->{query}->{is_active} ) {
@@ -163,6 +217,17 @@ sub cms_job_postsave_callback {
         $job->inject_worker;
     }
     return 1;
+}
+
+# If the Create and Manage plugin is installed in MT5 (and thereby the Manage
+# menu exists), then we *don't* want to show the link to Bob the Rebuilder
+# there and need to explicitly hide it: just check if this is MT5
+sub mt5_menu_condition {
+    # This is MT4.x; display the Manage > Rebuilder menu item.
+    return 1 if MT->product_version =~ /^4/;
+    # This is MT5; don't display Manage > Rebuilder because it exists at
+    # Settings > Rebuilder.
+    return 0;
 }
 
 1;

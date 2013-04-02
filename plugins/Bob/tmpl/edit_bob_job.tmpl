@@ -1,18 +1,23 @@
-<mt:if name="job_id">
+<mt:if name="id">
     <mt:setvarblock name="page_title"><__trans phrase="Edit [_1]" params="<$mt:var name="object_label"$>"></mt:setvarblock>
 <mt:else>
     <mt:setvarblock name="page_title"><__trans phrase="New [_1]" params="<$mt:var name="object_label"$>"></mt:setvarblock>
     <mt:setvar name="new_object" value="1">
 </mt:if>
-<$mt:setvar name="position_actions_bottom" value="1"$>
 
-<mt:if name="id">
 <mt:setvarblock name="object_nav">
-<ul class="object-nav">
-    <li><a href="<$mt:var name="script_url"$>?__mode=rebuilder_list"><__trans phrase="Manage [_1]" params="<$mt:var name="object_label_plural"$>"></a></li>
-</ul>
+    <ul class="object-nav">
+        <li>
+        <mt:If tag="Version" lt="5">
+            <a href="<$mt:var name="script_url"$>?__mode=rebuilder_list">
+        <mt:Else>
+            <a href="<$mt:var name="script_url"$>?__mode=list&amp;_type=bob_job&amp;blog_id=0">
+        </mt:If>
+                <__trans phrase="Manage [_1]" params="<$mt:var name="object_label_plural"$>">
+            </a>
+        </li>
+    </ul>
 </mt:setvarblock>
-</mt:if>
 
 <mt:setvarblock name="system_msg">
 <mt:if name="saved">
@@ -23,47 +28,17 @@
     </mtapp:statusmsg>
 </mt:if>
 </mt:setvarblock>
+
 <mt:setvar name="screen_id" value="edit_job">
+
 <mt:setvar name="position_actions_bottom" value="1">
+
 <mt:setvarblock name="system_msg">
-    <mt:if name="saved">
-        <mtapp:statusmsg
-            id="saved"
-            class="success">
-            <__trans phrase="Your changes have been saved.">
-        </mtapp:statusmsg>
-    </mt:if>
-    <mt:if name="saved_deleted">
-        <mtapp:statusmsg
-            id="saved-deleted"
-            class="success">
-            <__trans phrase="The selected job has been deleted from the database.">
-        </mtapp:statusmsg>
-    </mt:if>
-    <mt:if name="error">
-        <mtapp:statusmsg
-            id="generic-error"
-            class="error">
-            <mt:var name="error">
-        </mtapp:statusmsg>
-    </mt:if>
     <mtapp:statusmsg
-     id="blank-fields"
-     class="error hidden">
-        <__trans phrase="Please ensure all required fields (highlighted) have been filled in.">
+         id="blank-fields"
+         class="error hidden">
+            <__trans phrase="Please ensure all required fields (highlighted) have been filled in.">
     </mtapp:statusmsg>
-</mt:setvarblock>
-<mt:setvarblock name="html_head">
-    <script type="text/javascript">
-    <!--
-        var customfield_types_loop = <mt:var name="customfield_types_loop" to_json="1">
-
-        function init() {
-        }
-
-        TC.attachLoadEvent(init);
-    //-->
-    </script>
 </mt:setvarblock>
 
 <mt:include name="include/header.tmpl">
@@ -76,71 +51,93 @@
     <input type="hidden" name="magic_token" value="<mt:var name="magic_token">" />
     <input type="hidden" name="order" value="<mt:var name="order">" />
 
-    <fieldset>
+    <mtapp:setting
+        id="job_blog_id"
+        label="<__trans phrase="Blog">"
+        required="1">
         <mt:unless name="blog_name">
-        <mtapp:setting
-            id="job_blog_id"
-            label="<__trans phrase="Blog">"
-            required="1">
             <select name="blog_id" id="job_blog_id">
             <mt:loop name="blogs_loop">
-                <option value="<mt:var name="blog_id">"><mt:var name="blog_name" escape="html"></option>
+                <option value="<mt:var name="blog_id">">
+                    <mt:var name="blog_name" escape="html">
+                </option>
             </mt:loop>
             </select>
-        </mtapp:setting>
-        <mt:else>
-        <mtapp:setting
-            id="job_blog_id"
-            label="<__trans phrase="Blog">"
-            required="1">
+        <mt:Else>
             <span><mt:var name="blog_name" escape="html"></span>
             <input type="hidden" name="blog_id" value="<mt:var name="blog_id">" />
-        </mtapp:setting>
         </mt:unless>
-    </fieldset>
+    </mtapp:setting>
 
-    <fieldset>
-        <mtapp:setting
-            id="job_type"
-            label="<__trans phrase="Rebuild Type">"
-            required="1">
-            <select name="type" id="job_type">
-            <mt:loop name="types_loop">
-                <option value="<mt:var name="type_value">"<mt:if var="selected"> selected="selected"</mt:if>><mt:var name="type_name" escape="html"></option>
-            </mt:loop>
-            </select>
-        </mtapp:setting>
-    </fieldset>
+    <mtapp:setting
+        id="job_type"
+        label="<__trans phrase="Rebuild Type">"
+        required="1"
+        hint="Select the archive type (or the entire blog) to be republished. Note that all archive types are listed here; be sure to select those enabled for the chosen blog."
+        show_hint="1">
+        <select name="type" id="job_type">
+        <mt:loop name="types_loop">
+            <option value="<mt:var name="type_value">"
+                <mt:if var="selected">selected="selected"</mt:if>>
+                <mt:var name="type_name" escape="html">
+            </option>
+        </mt:loop>
+        </select>
+    </mtapp:setting>
 
-    <fieldset>
-        <mtapp:setting
-            id="job_frequency"
-            label="<__trans phrase="Frequency">"
-            required="1">
-            <select name="frequency" id="job_frequency">
-            <mt:loop name="frequencies_loop">
-                <option value="<mt:var name="frequency_value">"<mt:if var="selected"> selected="selected"</mt:if>><mt:var name="frequency_name" escape="html"></option>
-            </mt:loop>
-            </select>
-        </mtapp:setting>
-    </fieldset>
+    <mtapp:setting
+        id="job_frequency"
+        label="<__trans phrase="Frequency">"
+        required="1"
+        hint="How often should this job run?"
+        show_hint="1">
+        <select name="frequency" id="job_frequency">
+        <mt:loop name="frequencies_loop">
+            <option value="<mt:var name="frequency_value">"
+                <mt:if var="selected">selected="selected"</mt:if>>
+                <mt:var name="frequency_name" escape="html">
+            </option>
+        </mt:loop>
+        </select>
+    </mtapp:setting>
 
-    <fieldset>
-        <mtapp:setting
-            id="is_active"
-            label="<__trans phrase="Active">">
-                <input type="checkbox" name="is_active" id="is_active" value="1" <mt:if name="is_active">checked="checked"</mt:if>/>
-        </mtapp:setting>
-    </fieldset>
+    <mtapp:setting
+        id="is_active"
+        label="<__trans phrase="Status">">
+        <select name="is_active" id="is_active">
+            <option value="1"
+                <mt:If name="is_active" eq="1">selected</mt:If>>
+                Active
+            </option>
+            <option value="0"
+                <mt:If name="is_active" eq="0">selected</mt:If>>
+                Inactive
+            </option>
+        </select>
+    </mtapp:setting>
 
-<mt:setvartemplate name="action_buttons">
-    <button
-        type="submit"
-        accesskey="s"
-        title="<__trans phrase="Save changes to this [_1] (s)" params="<mt:var name="object_label" lower_case="1">">"
-        class="primary-button"
-        ><__trans phrase="Save Changes"></button>
-</mt:setvartemplate>
-<mt:include name="include/actions_bar.tmpl" bar_position="bottom" hide_pager="1" settings_bar="1">
+    <div class="actions-bar actions-bar-bottom pkg">
+        <div class="actions-bar-inner">
+            <div class="button-actions actions">
+                <button
+                    type="submit"
+                    accesskey="s"
+                    title="<__trans phrase="Save changes to this [_1] (s)" params="<mt:var name="object_label" lower_case="1">">"
+                    class="action primary button primary-button"
+                    ><__trans phrase="Save Changes"></button>
+            <mt:if name="id">
+                <button
+                    mt:mode="rebuilder_delete"
+                    type="submit"
+                    accesskey="x"
+                    title="Delete this rebuilder job."
+                    class="action button"
+                    ><__trans phrase="Delete"></button>
+            </mt:if>
+            </div>
+        </div>
+    </div>
+
 </form>
+
 <mt:include name="include/footer.tmpl">

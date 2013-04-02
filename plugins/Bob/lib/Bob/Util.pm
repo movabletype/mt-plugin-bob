@@ -18,23 +18,23 @@ use base 'Exporter';
 our @EXPORT_OK = qw( get_type_data get_frequency_data );
 
 use constant FREQUENCIES => [
-    { 1    => '1 minute' },
-    { 2    => '2 minutes' },
-    { 5    => '5 minutes' },
-    { 10   => '10 minutes' },
-    { 15   => '15 minutes' },
-    { 20   => '20 minutes' },
-    { 30   => '30 minutes' },
-    { 45   => '45 minutes' },
-    { 60   => '60 minutes' },
-    { 90   => '90 minutes' },
-    { 120  => '2 hours' },
-    { 240  => '4 hours' },
-    { 360  => '6 hours' },
-    { 480  => '8 hours' },
-    { 720  => '12 hours' },
-    { 1440 => '24 hours' },
-    { 2880 => '48 hours' },
+    { 1     => '1 minute' },
+    { 2     => '2 minutes' },
+    { 5     => '5 minutes' },
+    { 10    => '10 minutes' },
+    { 15    => '15 minutes' },
+    { 20    => '20 minutes' },
+    { 30    => '30 minutes' },
+    { 45    => '45 minutes' },
+    { 60    => '60 minutes' },
+    { 90    => '90 minutes' },
+    { 120   => '2 hours' },
+    { 240   => '4 hours' },
+    { 360   => '6 hours' },
+    { 480   => '8 hours' },
+    { 720   => '12 hours' },
+    { 1440  => '24 hours' },
+    { 2880  => '48 hours' },
     { 10080 => '7 days' },
 ];
 
@@ -75,7 +75,7 @@ sub get_constants {
         if ($wants_arrayref) {
             ($row->{$key_name}, $row->{$val_name}) = @pair;
             $row->{selected} = ( $selected_val eq $pair[0] );
-            push @$converted, $row;            
+            push @$converted, $row;
         }
         else {
             $converted->{ $pair[0] } = $pair[1];
