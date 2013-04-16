@@ -52,5 +52,5 @@ This plugin is not an official Six Apart release, and as such support from Six
 Apart for this plugin is not available.
 
 Authors: Six Apart, Endevver
-Copyright: 2009 Six Apart Ltd.
-License: GPL
+Copyright: 2009-2013 Six Apart Ltd.
+License: MIT
