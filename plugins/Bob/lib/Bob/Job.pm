@@ -127,7 +127,7 @@ sub list_properties {
             },
         },
         blog_name => {
-            base  => '__common.blog_name',
+            base      => '__common.blog_name',
             order     => 200,
             display   => 'force',
             site_name => sub { MT->app->blog ? 0 : 1 },
