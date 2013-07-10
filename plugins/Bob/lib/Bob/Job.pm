@@ -127,7 +127,7 @@ sub list_properties {
             },
         },
         blog_name => {
-            base  => '__common.blog_name',
+            base      => '__common.blog_name',
             order     => 200,
             display   => 'force',
             site_name => sub { MT->app->blog ? 0 : 1 },
@@ -168,7 +168,7 @@ sub list_properties {
             html    => sub {
                 my $prop = shift;
                 my ( $obj, $app, $opts ) = @_;
-                my $ts          = $prop->raw(@_) or return '';
+                my $ts          = $prop->raw(@_) or return 'never';
                 my $date_format = MT::App::CMS::LISTING_DATE_FORMAT();
                 my $blog        = MT->model('blog')->load( $obj->blog_id );
                 my $is_relative
