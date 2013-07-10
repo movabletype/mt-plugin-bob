@@ -79,12 +79,6 @@ sub edit_job {
     my $plugin = MT->component('Bob');
     my $tmpl   = $plugin->load_tmpl('edit_bob_job.tmpl');
 
-    if ( $app->param('saved') ) {
-        _redirect_to_listing({
-            app => $app,
-            key => 'saved',
-        });
-    }
     if ( $app->param('deleted') ) {
         _redirect_to_listing({
             app => $app,
@@ -134,6 +128,9 @@ sub edit_job {
         = get_frequency_data( 'frequency_value', 'frequency_name', $frequency );
     $param->{types_loop}
         = get_type_data( 'type_value', 'type_name', $type );
+
+    $param->{saved} = $q->param('saved_changes');
+
     return $app->build_page( $tmpl, $param );
 }
 

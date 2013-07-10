@@ -1,3 +1,4 @@
+<mt:Var name="screen_group" value="tools">
 <mt:if name="id">
     <mt:setvarblock name="page_title"><__trans phrase="Edit [_1]" params="<$mt:var name="object_label"$>"></mt:setvarblock>
 <mt:else>
@@ -19,6 +20,10 @@
     </ul>
 </mt:setvarblock>
 
+<mt:setvar name="screen_id" value="edit_job">
+
+<mt:setvar name="position_actions_bottom" value="1">
+
 <mt:setvarblock name="system_msg">
 <mt:if name="saved">
     <mtapp:statusmsg
@@ -27,13 +32,6 @@
         <__trans phrase="Your changes have been saved.">
     </mtapp:statusmsg>
 </mt:if>
-</mt:setvarblock>
-
-<mt:setvar name="screen_id" value="edit_job">
-
-<mt:setvar name="position_actions_bottom" value="1">
-
-<mt:setvarblock name="system_msg">
     <mtapp:statusmsg
          id="blank-fields"
          class="error hidden">
