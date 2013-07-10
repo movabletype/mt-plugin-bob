@@ -116,6 +116,15 @@
         </select>
     </mtapp:setting>
 
+<mt:If name="id">
+    <mtapp:setting
+        id="activity"
+        label="<__trans phrase="Activity">">
+        <p><__trans phrase="Last run">: <mt:Var name="last_run" _default="never"></p>
+        <p><__trans phrase="Next run">: <mt:Var name="next_run"></p>
+    </mtapp:setting>
+</mt:If>
+
     <div class="actions-bar actions-bar-bottom pkg">
         <div class="actions-bar-inner">
             <div class="button-actions actions">

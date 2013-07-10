@@ -168,7 +168,7 @@ sub list_properties {
             html    => sub {
                 my $prop = shift;
                 my ( $obj, $app, $opts ) = @_;
-                my $ts          = $prop->raw(@_) or return '';
+                my $ts          = $prop->raw(@_) or return 'never';
                 my $date_format = MT::App::CMS::LISTING_DATE_FORMAT();
                 my $blog        = MT->model('blog')->load( $obj->blog_id );
                 my $is_relative

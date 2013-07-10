@@ -18,8 +18,9 @@ use Bob::Job;
 use Bob::Util qw( get_type_data get_frequency_data );
 
 use MT::Blog;
-use MT::Util;
+use MT::Util qw( format_ts );
 
+# The Listing screen for MT4.
 sub list_jobs {
     my ($app) = @_;
 
@@ -62,8 +63,7 @@ sub list_jobs {
 
                 if ( $job->last_run ) {
                     $row->{formatted_last_run}
-                        = MT::Util::format_ts( '%d %b %Y %H:%M',
-                        $job->last_run );
+                        = format_ts( '%d %b %Y %H:%M', $job->last_run );
                 }
                 else {
                     $row->{formatted_last_run} = 'N/A';
@@ -103,6 +103,9 @@ sub edit_job {
         $param->{blog_id}   = $blog->id;
         $param->{is_active} = $job->is_active;
         $param->{id}        = $job->id;
+
+        $param->{last_run}  = format_ts( '%d %b %Y %H:%M', $job->last_run );
+        $param->{next_run}  = format_ts( '%d %b %Y %H:%M', $job->next_run );
     }
     else {
         my @blogs_loop;
