@@ -22,7 +22,7 @@ applications:
             rebuilder_delete: $Bob::Bob::CMS::delete_job
         menus:
             # MT5
-            settings:rebuilder:
+            tools:rebuilder:
                 label: Rebuilder
                 order: 4000
                 mode: list
