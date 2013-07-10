@@ -1,7 +1,7 @@
 name: Bob the Rebuilder
 id: Bob
 key: Bob
-version: 1.1.1
+version: 1.1.2
 schema_version: 1
 description: Rebuild selected pages automatically
 
@@ -22,7 +22,7 @@ applications:
             rebuilder_delete: $Bob::Bob::CMS::delete_job
         menus:
             # MT5
-            settings:rebuilder:
+            tools:rebuilder:
                 label: Rebuilder
                 order: 4000
                 mode: list
@@ -40,9 +40,9 @@ applications:
                 condition: $Bob::Bob::CMS::mt5_menu_condition
 
 callbacks:
-    cms_pre_save.bob_job: $Bob::Bob::CMS::cms_job_presave_callback
+    cms_pre_save.bob_job:  $Bob::Bob::CMS::cms_job_presave_callback
     cms_post_save.bob_job: $Bob::Bob::CMS::cms_job_postsave_callback
-    Bob::Job::pre_remove: $Bob::Bob::Util::job_preremove
+    Bob::Job::pre_remove:  $Bob::Bob::Util::job_preremove
 
 listing_screens:
     bob_job:
