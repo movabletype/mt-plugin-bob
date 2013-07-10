@@ -34,7 +34,7 @@ on a schedule, and can be enabled or disabled as needed.
 "Create a rebuilder job" to get started: specify a blog, what you want to
 republish, its frequency, and save it. Done!
 
-Its important to be aware of the load you may be placing on the server -- many
+It's important to be aware of the load you may be placing on the server -- many
 jobs each republishing an entire blog every few minutes is goint to take a lot
 of resources. Planning site architecture is outside of the scope of this
 document, but the goal should be to publish efficiently. Only publish what
