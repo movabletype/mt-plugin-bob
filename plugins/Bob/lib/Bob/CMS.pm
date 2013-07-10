@@ -122,6 +122,10 @@ sub edit_job {
             push @blogs_loop, $row;
         }
         $param->{blogs_loop} = \@blogs_loop;
+
+        # A default frequency value of 1440 minutes (1 day/24 hours) is a safe
+        # starting point.
+        $frequency = 1440;
     }
     $param->{object_label}        = Bob::Job->class_label;
     $param->{object_label_plural} = Bob::Job->class_label_plural;
